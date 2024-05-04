@@ -1,4 +1,7 @@
 require "active_support/core_ext/integer/time"
+Rails.application.routes.default_url_options = {
+  host: 'fast-lane-racers-back-end-1.onrender.com'
+}
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -6,7 +9,19 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   config.enable_reloading = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:         'smtp.gmail.com',
+    port:            587,
+    domain:          '127.0.0.1:3000',
+    user_name:       'rehmanmuneeb66@gmail.com',
+    password:        'hctghbagsbqmavbt',
+    authentication:  'plain',
+    enable_starttls: true,
+    open_timeout:    5,
+    read_timeout:    5 }
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -31,10 +46,10 @@ Rails.application.configure do
   end
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  config.active_storage.service = :google
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.perform_caching = false
 
@@ -56,7 +71,7 @@ Rails.application.configure do
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
@@ -65,7 +80,7 @@ Rails.application.configure do
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
-
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 end

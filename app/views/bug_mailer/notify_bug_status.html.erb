@@ -1,0 +1,15 @@
+<h2>Hi <%= @user.name %>,</h2>
+
+  <p>We want to inform you that the status of the following bug has been updated:</p>
+
+  <h3>Title: <%= @bug.title %></h3>
+  <p>Description: <%= @bug.description %></p>
+  <p>New Status: <%= @bug.status %></p>
+  
+  <% if @bug.completed? %>
+    <p>Congratulations! This feature has been marked as completed.</p>
+  <% elsif @bug.resolved? %>
+    <p>This bug has been marked as resolved. Please review and confirm.</p>
+  <% end %>
+
+  <p>Thank you!</p>
