@@ -61,6 +61,7 @@ class ProjectsController < ApplicationController
   
     project.users << user
     render json: { message: 'User assigned successfully' }
+    ProjectMailer.with(user: user, project: project).notify_user_assignment.deliver_later
   end
   
   
