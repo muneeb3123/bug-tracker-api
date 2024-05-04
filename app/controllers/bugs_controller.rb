@@ -19,8 +19,9 @@ class BugsController < ApplicationController
           bug: BugSerializer.new(bug).serializable_hash[:data][:attributes],
           message: 'Bug created successfully'
         }, status: :created
+       BugMailer.with(bug: bug).notify_bug_creation.deliver_later
       else
-        render json: { error: bug.errors.messages }, status: 422
+        render json: { error: bug.errors.full_messages }, status: 422
       end
     end
   
@@ -45,8 +46,6 @@ class BugsController < ApplicationController
   
     def assign_bug_or_feature
       if @bug.user_id == current_user.id
-        puts @bug.user_id
-        puts current_user.id
         render json: { error: 'Bug is already assigned to a user' }, status: :unprocessable_entity
         return
       end
@@ -59,6 +58,8 @@ class BugsController < ApplicationController
         else
           render json: { message: 'Feature assigned successfully' }
         end
+
+        BugMailer.with(bug: @bug, user: current_user).notify_bug_assignment.deliver_later
       else
         render json: { error: bug.errors.messages }, status: 422
       end
@@ -79,6 +80,7 @@ class BugsController < ApplicationController
         @bug.status = @bug.feature? ? 'completed' : 'resolved'
         if @bug.save
           render json: { message: 'Marked as resolved' }
+          BugMailer.with(bug: @bug, user: current_user).notify_bug_status.deliver_later
         else
           render json: { error: @bug.errors.messages }, status: 422
         end
