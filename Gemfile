@@ -19,6 +19,10 @@ gem 'jsonapi-serializer'
 
 gem 'devise-jwt'
 
+gem 'google-cloud-storage'
+
+gem 'ruby-vips'
+
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

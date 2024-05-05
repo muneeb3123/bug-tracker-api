@@ -8,6 +8,7 @@ class Ability
 
     if user.manager?
       can :create, Project
+      can :read, Bug
       can [:edit, :destroy, :read], Project, id: user.projects.pluck(:id)
       can [:assign_user, :remove_user ], Project, id: user.projects.pluck(:id)
     elsif user.developer?
