@@ -1,11 +1,11 @@
 require "active_support/core_ext/integer/time"
 Rails.application.routes.default_url_options = {
-  host: 'fast-lane-racers-back-end-1.onrender.com'
+  host: 'Bug-Zilla.onrender.com'
 }
 
 Rails.application.configure do
   
-  config.action_mailer.default_url_options = { host: 'fast-lane-racers-back-end-1.onrender.com', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'Bug-Zilla.onrender.com', port: 3000 }
   config.enable_reloading = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
