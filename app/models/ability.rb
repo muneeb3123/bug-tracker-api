@@ -16,7 +16,7 @@ class Ability
       can [:assign_bug_or_feature, :read], Bug, project_id: user.projects.pluck(:id)
       can :mark_resolved_or_completed, Bug, developer_id: user.id
     elsif user.qa?
-      can [:read,:users_and_bugs_by_project], Project
+      can [:read,:users_and_bugs_by_project , :search], Project
       can [:create ,:read, :update, :destroy], Bug
     end
   end
