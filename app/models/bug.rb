@@ -9,7 +9,6 @@ class Bug < ApplicationRecord
   validates :bug_type, presence: true, inclusion: { in: %w[feature bug] }
   validates :status, presence: true, inclusion: { in: %w[open started resolved completed] }
   validate :validate_attachment_filetypes, on: :create
-  some_method
 
   enum bug_type: { feature: 0, bug: 1 }
   enum status: { open: 0, started: 1, resolved: 2, completed: 3 }
