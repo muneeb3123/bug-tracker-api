@@ -1,7 +1,8 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
-  has_many :bugs, dependent: :destroy
+  has_many :bugs, class_name: 'Bug', foreign_key: 'creator_id', dependent: :destroy
+  has_many :bugs, class_name: 'Bug', foreign_key: 'developer_id', dependent: :destroy  
   has_many :user_projects
   has_many :projects, through: :user_projects
   
@@ -25,3 +26,4 @@ class User < ApplicationRecord
   scope :qas, -> { where(user_type: 'qa') }
   scope :managers, -> { where(user_type: 'manager') }
 end
+ 
