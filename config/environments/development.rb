@@ -1,6 +1,6 @@
 require "active_support/core_ext/integer/time"
 Rails.application.routes.default_url_options = {
-  host: 'fast-lane-racers-back-end-1.onrender.com'
+  host: 'http://localhost:3000'
 }
 
 Rails.application.configure do

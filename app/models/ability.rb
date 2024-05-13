@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Ability
   include CanCan::Ability
 
@@ -7,16 +5,19 @@ class Ability
     user ||= User.new
 
     if user.manager?
-      can :create, Project
+      can [:create, :users_and_bugs_by_project, :search], Project
+      can [:developers, :qas],  User
       can :read, Bug
-      can [:edit, :destroy, :read], Project, id: user.projects.pluck(:id)
+      can [:update, :destroy, :read], Project, id: user.projects.pluck(:id)
       can [:assign_user, :remove_user ], Project, id: user.projects.pluck(:id)
     elsif user.developer?
+      can :users_and_bugs_by_project, Project
+      can :read, Project, id: user.projects.pluck(:id)
       can [:assign_bug_or_feature, :read], Bug, project_id: user.projects.pluck(:id)
-      can :mark_resolved_or_completed, Bug, user_id: user.id
+      can :mark_resolved_or_completed, Bug, developer_id: user.id
     elsif user.qa?
-      can :read, Project
-      can :create, Bug
+      can [:read,:users_and_bugs_by_project], Project
+      can [:create ,:read, :update, :destroy], Bug
     end
   end
 end
