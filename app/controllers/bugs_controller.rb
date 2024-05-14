@@ -69,9 +69,9 @@ class BugsController < ApplicationController
       @bug.status = 'started'
       if @bug.save
         if @bug.bug?
-          render json: { message: 'Bug assigned successfully', bug: @bug}
+          render json: { message: 'Bug assigned successfully', bug: BugSerializer.new(@bug).serializable_hash[:data][:attributes]}
         else
-          render json: { message: 'Feature assigned successfully', bug: @bug}
+          render json: { message: 'Feature assigned successfully', bug: BugSerializer.new(@bug).serializable_hash[:data][:attributes]}
         end
 
         BugMailer.with(bug: @bug, user: current_user).notify_bug_assignment.deliver_later
@@ -94,7 +94,7 @@ class BugsController < ApplicationController
       
         @bug.status = @bug.feature? ? 'completed' : 'resolved'
         if @bug.save
-          render json: { message: 'Marked as resolved', bug: @bug }
+          render json: { message: 'Marked as resolved', bug: BugSerializer.new(@bug).serializable_hash[:data][:attributes]}
           BugMailer.with(bug: @bug, user: current_user).notify_bug_status.deliver_later
         else
           render json: { error: @bug.errors.messages }, status: 422
