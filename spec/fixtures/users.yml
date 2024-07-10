@@ -1,0 +1,17 @@
+manager:
+  email: manager@gmail.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, '123456') %>
+  user_type: manager
+  name: Manager Name
+
+developer:
+  email: developer@gmail.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, '123456') %>
+  user_type: developer
+  name: Developer Name
+
+qa:
+  email: qa@gmail.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, '123456') %>
+  user_type: qa
+  name: QA Name
