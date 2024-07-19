@@ -100,9 +100,15 @@ class ProjectsController < ApplicationController
   end
 
   def search
-    if params[:query].present?
-      query = params[:query].strip.downcase
+    if params[:query].blank?
+      sleep(1)
+      render json: { error: 'Query parameter is missing' }, status: :bad_request
+      return
+    end
   
+    query = params[:query].strip.downcase
+    projects = Project.where("lower(name) LIKE ?", "%#{query}%")
+
       if query.present?
         if query.length == 1
           projects = current_user.projects.where("name ILIKE ?", "%#{query}%")
@@ -112,16 +118,12 @@ class ProjectsController < ApplicationController
           projects = current_user.projects.where("name ILIKE ?", "#{query}%")
         end
   
-        if projects.empty?
-          render json: { error: 'No projects found' }, status: :not_found
-        else
-          render json: projects.pluck(:name)
-        end
-      else
-        render json: { error: 'Empty search query' }, status: :unprocessable_entity
-      end
+    if projects.empty?
+      sleep(1)
+      render json: { error: 'No projects found' }, status: :not_found
     else
-      render json: { error: 'No search query provided' }, status: :unprocessable_entity
+      sleep(1)
+      render json: projects.pluck(:name), status: :ok
     end
   end
   
