@@ -4,13 +4,9 @@ class BugsController < ApplicationController
     load_and_authorize_resource
 
     def index
-      if current_user.developer?
         bugs = Bug.includes(:project)
                .joins(project: :users)
                .where(users: { id: current_user.id })
-      else
-        bugs = Bug.includes(:project).all
-      end
     
       serialized_data = serialize_bugs_with_project_name(bugs)
     
@@ -117,7 +113,10 @@ class BugsController < ApplicationController
     end
   
     def find_bug
-      @bug = Bug.find_by(id: params[:id])
+      @bug = Bug.includes(:project)
+      .joins(project: :users)
+      .where(users: { id: current_user.id }).find_by(id: params[:id])
+
       unless @bug
         render json: { error: 'Bug not found' }, status: :not_found
         return
