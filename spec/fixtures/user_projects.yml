@@ -1,0 +1,23 @@
+project_1_user_manager:
+  user: manager
+  project: one
+
+project_2_user_manager:
+  user: manager
+  project: two
+
+project_3_user_manager:
+  user: manager
+  project: three
+
+project_3_user_developer:
+  user: developer
+  project: three
+
+project_3_user_qa:
+  user: qa
+  project: three
+
+project_4_user_manager:
+  user: admin
+  project: four
