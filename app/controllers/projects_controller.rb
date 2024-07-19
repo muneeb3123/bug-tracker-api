@@ -4,19 +4,14 @@ class ProjectsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    if current_user.developer?
-      projects = current_user.projects
+    projects = current_user.projects
       if projects.empty?
         render json: { error: 'No projects found for the current user' }, status: :unprocessable_entity
         return
       else
-        render json: ProjectSerializer.new(projects).serializable_hash[:data].map { |item| item[:attributes] }
-        return
-      end
-    end
-  
-    projects = Project.all
+
     render json: ProjectSerializer.new(projects).serializable_hash[:data].map { |item| item[:attributes] }
+  end
   end
     
   
@@ -90,7 +85,6 @@ class ProjectsController < ApplicationController
         render json: { error: 'User is not assigned to the project' }, status: :unprocessable_entity
         return
       end
-    
       project.users.delete(user)
       bugs_to_remove = project.bugs.where(developer_id: user.id)
       bugs_to_remove.destroy_all
@@ -99,14 +93,12 @@ class ProjectsController < ApplicationController
   end
   
   def users_and_bugs_by_project
-    puts @project.name
     users = UserSerializer.new(@project.users).serializable_hash[:data].map { |item| item[:attributes] }
     bugs =  BugSerializer.new(@project.bugs).serializable_hash[:data].map { |item| item[:attributes] }
 
     render json: {collaborators: users, bugs: bugs}
   end
 
-  
   def search
     if params[:query].blank?
       sleep(1)
@@ -116,6 +108,15 @@ class ProjectsController < ApplicationController
   
     query = params[:query].strip.downcase
     projects = Project.where("lower(name) LIKE ?", "%#{query}%")
+
+      if query.present?
+        if query.length == 1
+          projects = current_user.projects.where("name ILIKE ?", "%#{query}%")
+        elsif query.length == 2
+          projects = current_user.projects.where("name ILIKE ?", "#{query[0]}%#{query[1]}%")
+        else
+          projects = current_user.projects.where("name ILIKE ?", "#{query}%")
+        end
   
     if projects.empty?
       sleep(1)
@@ -126,7 +127,6 @@ class ProjectsController < ApplicationController
     end
   end
   
-  
   private
 
   def project_params
@@ -134,7 +134,7 @@ class ProjectsController < ApplicationController
   end
 
   def find_project
-    @project = Project.find_by(id: params[:id])
+    @project = current_user.projects.find_by(id: params[:id])
     unless @project
       render json: { error: 'Project not found' }, status: :not_found
     end
